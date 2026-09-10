@@ -1,0 +1,27 @@
+services:
+  irada-db:
+    image: postgres:17
+    env_file: .env
+    volumes:
+      - irada-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  irada-odoo:
+    image: odoo:${ODOO_VERSION}
+    depends_on:
+      - irada-db
+    ports:
+      - "8069:8069"
+    env_file: .env
+    environment:
+      HOST: irada-db
+      USER: ${POSTGRES_USER}
+      PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - irada-web-data:/var/lib/odoo
+      - ./addons:/mnt/extra-addons
+    restart: unless-stopped
+
+volumes:
+  irada-db-data:
+  irada-web-data:
