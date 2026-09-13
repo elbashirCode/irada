@@ -1,0 +1,22 @@
+body, .o_web_client {
+    font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif !important;
+}
+
+:root {
+    --irada-primary: #1D9E75;
+    --irada-primary-dark: #0F6E56;
+}
+
+.o_main_navbar {
+    background-color: var(--irada-primary) !important;
+}
+
+.btn-primary {
+    background-color: var(--irada-primary) !important;
+    border-color: var(--irada-primary) !important;
+
+    &:hover {
+        background-color: var(--irada-primary-dark) !important;
+        border-color: var(--irada-primary-dark) !important;
+    }
+}

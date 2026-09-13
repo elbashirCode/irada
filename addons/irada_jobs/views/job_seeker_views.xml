@@ -1,0 +1,118 @@
+<odoo>
+
+    <!-- LIST VIEW مع ألوان حسب الحالة -->
+    <record id="view_job_seeker_list" model="ir.ui.view">
+        <field name="name">irada.job.seeker.list</field>
+        <field name="model">irada.job.seeker</field>
+        <field name="arch" type="xml">
+            <list string="الباحثون عن عمل"
+                  decoration-success="state == 'hired'"
+                  decoration-info="state == 'in_process'"
+                  decoration-muted="state == 'available'">
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="disability_type"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'hired'"
+                       decoration-info="state == 'in_process'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- KANBAN VIEW -->
+    <record id="view_job_seeker_kanban" model="ir.ui.view">
+        <field name="name">irada.job.seeker.kanban</field>
+        <field name="model">irada.job.seeker</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="disability_type"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_card oe_kanban_global_click p-3">
+                            <strong><field name="name"/></strong>
+                            <div class="text-muted"><field name="phone"/></div>
+                            <div class="mt-2">
+                                <field name="disability_type" widget="badge"/>
+                                <field name="state" widget="badge"
+                                       decoration-success="state == 'hired'"
+                                       decoration-info="state == 'in_process'"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- FORM VIEW مع statusbar وbutton box -->
+    <record id="view_job_seeker_form" model="ir.ui.view">
+        <field name="name">irada.job.seeker.form</field>
+        <field name="model">irada.job.seeker</field>
+        <field name="arch" type="xml">
+            <form string="باحث عن عمل">
+                <header>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="available,in_process,hired"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="اسم الباحث..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="بيانات التواصل">
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </group>
+                        <group string="التصنيف">
+                            <field name="disability_type"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="المهارات" name="skills_page">
+                            <field name="skills" placeholder="اكتب المهارات والخبرات هنا..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW مع فلاتر الحالة -->
+    <record id="view_job_seeker_search" model="ir.ui.view">
+        <field name="name">irada.job.seeker.search</field>
+        <field name="model">irada.job.seeker</field>
+        <field name="arch" type="xml">
+            <search string="بحث عن الباحثين">
+                <field name="name"/>
+                <field name="disability_type"/>
+
+                <filter string="متاح" name="filter_available" domain="[('state','=','available')]"/>
+                <filter string="قيد التقديم" name="filter_in_process" domain="[('state','=','in_process')]"/>
+                <filter string="تم التوظيف" name="filter_hired" domain="[('state','=','hired')]"/>
+
+                <separator/>
+                <filter string="نوع الإعاقة" name="group_disability" context="{'group_by':'disability_type'}"/>
+                <filter string="الحالة" name="group_state" context="{'group_by':'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_job_seeker" model="ir.actions.act_window">
+        <field name="name">الباحثون عن عمل</field>
+        <field name="res_model">irada.job.seeker</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <!-- MENUS -->
+    <menuitem id="menu_irada_root" name="إرادة" sequence="10"/>
+    <menuitem id="menu_job_seeker" name="الباحثون عن عمل"
+              parent="menu_irada_root" action="action_job_seeker" sequence="10"/>
+
+</odoo>
